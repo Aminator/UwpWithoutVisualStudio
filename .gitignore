@@ -28,6 +28,7 @@ bld/
 # AppxManifests
 
 !UwpWithoutVisualStudio/AppxManifests/**
+!UwpWithoutVisualStudio.Xaml/AppxManifests/**
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

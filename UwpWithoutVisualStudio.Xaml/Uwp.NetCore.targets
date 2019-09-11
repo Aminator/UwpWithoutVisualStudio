@@ -1,0 +1,25 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="Deploy" AfterTargets="PostBuildEvent">
+    <PropertyGroup>
+      <AppxDestination>$(OutputPath)AppX\</AppxDestination>
+      <AppxPlatform Condition="'$(Platform)' == 'AnyCPU'">x64</AppxPlatform>
+      <AppxPlatform Condition="'$(Platform)' != 'AnyCPU'">$(Platform)</AppxPlatform>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <AppxFiles Include="AppxManifests\$(AppxPlatform)\*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(ReferenceCopyLocalPaths)" DestinationFolder="$(AppxDestination)" />
+    <Copy SourceFiles="@(AppxFiles)" DestinationFolder="$(AppxDestination)" />
+    <Copy SourceFiles="$(OutputPath)$(ProjectName).dll" DestinationFiles="$(AppxDestination)entrypoint\$(ProjectName).exe" />
+    <Copy SourceFiles="@(Content)" DestinationFiles="$(AppxDestination)%(Content.Identity)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' == ''" />
+    <Copy SourceFiles="@(Content)" DestinationFiles="$(AppxDestination)%(Content.Link)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
+  </Target>
+
+  <Target Name="Register" AfterTargets="Deploy">
+    <Exec Command="powershell Add-AppxPackage -Register $(AppxDestination)AppxManifest.xml" />
+  </Target>
+  
+</Project>
