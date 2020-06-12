@@ -1,7 +1,9 @@
-﻿using Windows.ApplicationModel.Activation;
+﻿using System;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 
 namespace UwpWithoutVisualStudio
@@ -33,9 +35,12 @@ namespace UwpWithoutVisualStudio
         {
         }
 
-        private void OnApplicationViewActivated(CoreApplicationView sender, IActivatedEventArgs e)
+        private async void OnApplicationViewActivated(CoreApplicationView sender, IActivatedEventArgs e)
         {
             sender.CoreWindow.Activate();
+
+            MessageDialog dialog = new MessageDialog("Hello from .NET 5!");
+            await dialog.ShowAsync();
         }
 
         private static void ExtendViewIntoTitleBar(bool extendViewIntoTitleBar)
