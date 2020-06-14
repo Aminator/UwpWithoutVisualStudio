@@ -10,4 +10,4 @@
 
 ## Prerequisites
 
-- [x] Latest .NET Core 3.0 SDK
+- [x] Latest .NET 5 SDK

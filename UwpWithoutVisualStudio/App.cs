@@ -50,8 +50,8 @@ namespace UwpWithoutVisualStudio
             if (extendViewIntoTitleBar)
             {
                 ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.ButtonBackgroundColor = Colors.Transparent;
-                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                titleBar.ButtonBackgroundColor = Color.FromArgb(0, 0, 0, 0);
+                titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(0, 0, 0, 0);
             }
         }
     }

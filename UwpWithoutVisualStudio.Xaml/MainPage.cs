@@ -1,7 +1,5 @@
-using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -12,21 +10,18 @@ namespace UwpWithoutVisualStudio.Xaml
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private bool isContentLoaded;
-
         public MainPage()
         {
-            InitializeComponent();
-        }
+            Grid grid = new Grid();
 
-        public void InitializeComponent()
-        {
-            if (isContentLoaded) return;
+            grid.Children.Add(new Button
+            {
+                Content = "Hello World",
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            });
 
-            isContentLoaded = true;
-
-            Uri resourceLocator = new Uri("ms-appx:///MainPage.xaml");
-            Application.LoadComponent(this, resourceLocator, ComponentResourceLocation.Application);
+            Content = grid;
         }
     }
 }

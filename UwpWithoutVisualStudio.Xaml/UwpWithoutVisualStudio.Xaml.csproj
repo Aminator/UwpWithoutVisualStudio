@@ -1,14 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+
+    <Platforms>AnyCPU;x86;x64;ARM64</Platforms>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifier>win-$(Platform.ToLower())</RuntimeIdentifier>
   </PropertyGroup>
 
-  <Import Project="Uwp.NetCore.targets" />
-
   <ItemGroup>
-    <Content Include="MainPage.xaml">
+    <Content Include="AppxManifest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources.pri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\**">
@@ -17,7 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
+    <PackageReference Include="Microsoft.VCRTForwarders.140" Version="1.0.6" />
+    <PackageReference Include="Microsoft.WinUI" Version="3.0.0-preview1.200515.3" />
   </ItemGroup>
+
+  <Target Name="Register" AfterTargets="Build">
+    <Exec Command="powershell Add-AppxPackage -Register $(OutputPath)AppxManifest.xml" />
+  </Target>
 
 </Project>
