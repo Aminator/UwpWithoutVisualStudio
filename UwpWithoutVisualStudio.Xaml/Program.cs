@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Threading;
 using Microsoft.UI.Xaml;
+using WinRT;
 
 namespace UwpWithoutVisualStudio.Xaml
 {
@@ -7,6 +8,7 @@ namespace UwpWithoutVisualStudio.Xaml
     {
         private static void Main(string[] args)
         {
+            ComWrappersSupport.InitializeComWrappers();
             Application.Start(p => { DispatcherQueueSyncContext.SetForCurrentThread(); new App(); });
         }
     }
