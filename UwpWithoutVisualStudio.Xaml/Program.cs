@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Threading;
+using Microsoft.UI.Xaml;
 
 namespace UwpWithoutVisualStudio.Xaml
 {
@@ -6,7 +7,7 @@ namespace UwpWithoutVisualStudio.Xaml
     {
         private static void Main(string[] args)
         {
-            Application.Start((p) => new App());
+            Application.Start(p => { DispatcherQueueSyncContext.SetForCurrentThread(); new App(); });
         }
     }
 }

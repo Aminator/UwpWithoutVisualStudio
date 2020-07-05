@@ -3,32 +3,28 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-
+    <Nullable>enable</Nullable>
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-
     <Platforms>AnyCPU;x86;x64;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="AppxManifest.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources.pri">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="AppxManifest.xml" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VCRTForwarders.140" Version="1.0.6" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="0.1.0-prerelease.200623.5" />
     <PackageReference Include="Microsoft.Windows.SDK.NET" Version="10.0.18362.3-preview" />
   </ItemGroup>
 
-  <Target Name="Register" AfterTargets="Build">
-    <Exec Command="powershell Add-AppxPackage -Register $(OutputPath)AppxManifest.xml" />
+  <Target Name="MakePri" AfterTargets="Build">
+    <Exec Command='"$(MSBuildProgramFiles32)\Windows Kits\10\bin\$(TargetPlatformVersion)\x86\MakePri.exe" new /pr $(OutputPath) /cf priconfig.xml /of $(OutputPath)resources.pri /o' />
+  </Target>
+
+  <Target Name="RegisterManifest" AfterTargets="MakePri">
+    <Exec Command="PowerShell Add-AppxPackage -Register $(OutputPath)AppxManifest.xml" />
   </Target>
 
 </Project>

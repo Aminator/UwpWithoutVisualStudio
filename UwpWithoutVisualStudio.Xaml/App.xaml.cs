@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,10 +14,8 @@ namespace UwpWithoutVisualStudio.Xaml
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public sealed class App : Application
+    public sealed partial class App : Application
     {
-        private bool isContentLoaded;
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -28,21 +26,6 @@ namespace UwpWithoutVisualStudio.Xaml
             Suspending += OnSuspending;
         }
 
-        public void InitializeComponent()
-        {
-            if (isContentLoaded) return;
-
-            isContentLoaded = true;
-
-            UnhandledException += (s, e) =>
-            {
-                if (Debugger.IsAttached)
-                {
-                    Debugger.Break();
-                }
-            };
-        }
-
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -50,6 +33,8 @@ namespace UwpWithoutVisualStudio.Xaml
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs e)
         {
+            TaskScheduler taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (!(Window.Current.Content is Frame rootFrame))
@@ -70,23 +55,11 @@ namespace UwpWithoutVisualStudio.Xaml
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.UWPLaunchActivatedEventArgs.PrelaunchActivated == false)
+            if (!e.UWPLaunchActivatedEventArgs.PrelaunchActivated)
             {
                 if (rootFrame.Content == null)
                 {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    Grid grid = new Grid();
-
-                    grid.Children.Add(new Button
-                    {
-                        Content = "Hello from .NET 5 and WinUI 3!",
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center
-                    });
-
-                    rootFrame.Content = grid;
+                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
 
                 // Ensure the current window is active
