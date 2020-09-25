@@ -1,30 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <Platforms>AnyCPU;x86;x64;ARM64</Platforms>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+		<TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<Platforms>AnyCPU;x86;x64;ARM64</Platforms>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="AppxManifest.xml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="AppxManifest.xml" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="0.1.0-prerelease.200623.5" />
-    <PackageReference Include="Microsoft.Windows.SDK.NET" Version="10.0.18362.3-preview" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="0.1.0-prerelease.200623.5" />
+		<PackageReference Include="Microsoft.Windows.SDK.NET" Version="10.0.18362.3-preview" />
+	</ItemGroup>
 
-  <Target Name="MakePri" AfterTargets="Build">
-    <Exec Command='"$(MSBuildProgramFiles32)\Windows Kits\10\bin\$(TargetPlatformVersion)\x86\MakePri.exe" new /pr $(OutputPath) /cf priconfig.xml /of $(OutputPath)resources.pri /o' />
-  </Target>
+	<Target Name="MakePri" AfterTargets="Build">
+		<Exec Command="&quot;$(MSBuildProgramFiles32)\Windows Kits\10\bin\$(TargetPlatformVersion)\x86\MakePri.exe&quot; new /pr $(OutputPath) /cf priconfig.xml /of $(OutputPath)resources.pri /o" />
+	</Target>
 
-  <Target Name="RegisterManifest" AfterTargets="MakePri">
-    <Exec Command="PowerShell Add-AppxPackage -Register $(OutputPath)AppxManifest.xml" />
-  </Target>
+	<Target Name="RegisterManifest" AfterTargets="MakePri">
+		<Exec Command="PowerShell Add-AppxPackage -Register $(OutputPath)AppxManifest.xml" />
+	</Target>
 
 </Project>

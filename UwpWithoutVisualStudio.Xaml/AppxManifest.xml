@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5" IgnorableNamespaces="uap uap5 mp build" xmlns:build="http://schemas.microsoft.com/developer/appx/2015/build">
-  <Identity Name="UwpWithoutVisualStudio.Xaml" Publisher="CN=Amin" Version="1.0.0.0" ProcessorArchitecture="x86" />
+  <Identity Name="UwpWithoutVisualStudio.Xaml" Publisher="CN=Amin" Version="1.0.0.0" ProcessorArchitecture="x64" />
   <mp:PhoneIdentity PhoneProductId="f155703d-e533-4785-b5c0-01c53ca8846f" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>UwpWithoutVisualStudio.Xaml</DisplayName>
@@ -33,6 +33,12 @@
     <Capability Name="internetClient" />
   </Capabilities>
   <Extensions>
+	  <Extension Category="windows.activatableClass.inProcessServer">
+		  <InProcessServer>
+			  <Path>Microsoft.WinUI.dll</Path>
+			  <ActivatableClass ActivatableClassId="Microsoft.UI.Xaml.Application._IApplicationStatics" ThreadingModel="both" />
+		  </InProcessServer>
+	  </Extension>
     <Extension Category="windows.activatableClass.inProcessServer">
       <InProcessServer>
         <Path>dcompi.dll</Path>
