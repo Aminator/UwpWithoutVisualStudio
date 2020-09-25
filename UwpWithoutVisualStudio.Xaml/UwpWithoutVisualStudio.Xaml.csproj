@@ -1,41 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <Platforms>AnyCPU;x86;x64;ARM64</Platforms>
-    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+		<TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+		<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+		<Platforms>x64</Platforms>
+		<PlatformTarget>x64</PlatformTarget>
+		<DefineConstants>DEBUG;TRACE;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+		<WinUIVersuion>3.0.0-preview1.200515.3</WinUIVersuion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="AppxManifest.xml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="AppxManifest.xml" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Assets\**" CopyToOutputDirectory="PreserveNewest" />
+		
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="0.1.0-prerelease.200623.5" />
-    <PackageReference Include="Microsoft.Windows.SDK.NET" Version="10.0.18362.3-preview" />
-    <PackageReference Include="Microsoft.WinUI" Version="3.0.0-preview1.200515.3" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="bin\Debug\net5.0\runtimes\win10-x64\native\en-us\**" />
+	  <EmbeddedResource Remove="bin\Debug\net5.0\runtimes\win10-x64\native\en-us\**" />
+	  <None Remove="bin\Debug\net5.0\runtimes\win10-x64\native\en-us\**" />
+	  <Page Remove="bin\Debug\net5.0\runtimes\win10-x64\native\en-us\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  
-  <Target Name="MakePri" AfterTargets="Build">
-    <Exec Command='"$(MSBuildProgramFiles32)\Windows Kits\10\bin\$(TargetPlatformVersion)\x86\MakePri.exe" new /pr $(OutputPath) /cf priconfig.xml /of $(OutputPath)resources.pri /o' />
-  </Target>
-  
-  <Target Name="RegisterManifest" AfterTargets="MakePri">
-    <Exec Command="PowerShell Add-AppxPackage -Register $(OutputPath)AppxManifest.xml" />
-  </Target>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="0.1.0-prerelease.200629.3" />
+		<PackageReference Include="Microsoft.Windows.SDK.NET" Version="10.0.18362.3-preview" />
+		<PackageReference Include="Microsoft.WinUI" Version="$(WinUIVersuion)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Update="App.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="MainPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+
+	<Target Name="MakePri" AfterTargets="Build">
+		<Exec Command="&quot;$(MSBuildProgramFiles32)\Windows Kits\10\bin\$(TargetPlatformVersion)\x86\MakePri.exe&quot; new /pr $(OutputPath) /cf priconfig.xml /of $(OutputPath)resources.pri /o" />
+	</Target>
+
+	<ItemGroup>
+		<_CopyItems Include="$(USERPROFILE)\.nuget\packages\microsoft.winui\$(WinUIVersuion)\runtimes\win10-x64\native\**\*.dll" />
+		<_CopyItems2 Include="$(BaseOutputPath)\win10-x64\**\*.*" />
+	</ItemGroup>
+
+	<Target Name="RegisterManifest" AfterTargets="MakePri">
+		<Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+		<Copy SourceFiles="@(_CopyItems2)" DestinationFiles="@(_CopyItems2->'$(OutDir)\runtimes\win10-x64\%(RecursiveDir)%(Filename)%(Extension)')"/>
+			<Exec Command="PowerShell Add-AppxPackage -Register $(OutputPath)AppxManifest.xml" />
+	</Target>
 
 </Project>
